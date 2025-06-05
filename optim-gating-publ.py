@@ -15,8 +15,13 @@ N = int((tmax-t0)/tstep)
 if 'noC' in sys.argv: c_flag = False
 else:
   from ctypes import c_long, c_int, c_double, POINTER
-  from ctypes import CDLL
-  evolib = CDLL('./lib_time_evo.so')
+  from platform import system as sysname
+  if sysname() == "Linux":
+    from ctypes import CDLL
+    evolib = CDLL('./lib_time_evo.so')
+  else:
+    from ctypes import WinDLL
+    evolib = WinDLL('./lib_time_evo.dll')
 
   evolib.time_evo.argtypes = (
          c_double,c_double,c_double,c_double,c_double,
